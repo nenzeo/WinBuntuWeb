@@ -1,18 +1,39 @@
-# # encoding: utf-8
+if os.family == 'windows'
+	describe file('c:\\inetpub\\wwwroot\\Default.htm') do
+		its('size') { should > 2300 }
+		its('size') { should < 3000 }
+	end
 
-# Inspec test for recipe WinBuntuWeb::default
+	describe windows_feature('Web-Server') do
+		it { should be_installed }
+	end
 
-# The Inspec reference, with examples and extensive documentation, can be
-# found at http://inspec.io/docs/reference/resources/
+	describe service 'w3svc' do
+		it { should be_running }
+	end
 
-unless os.windows?
-  # This is an example test, replace with your own test.
-  describe user('root'), :skip do
-    it { should exist }
-  end
+	describe command '(Invoke-WebRequest -UseBasicParsing localhost).StatusCode' do
+		its('stdout') { should match /200/ }
+	end
+
+	
+elsif os.family == 'debian'
+	describe file('/var/www/html/index.html') do
+		its('size') { should > 2300 }
+		its('size') { should < 3000 }
+	end
+
+	describe package('apache2') do
+		it { should be_installed }
+	end
+
+	describe service 'apache2' do
+		it { should be_running }
+	end
+
+	
+else 
+	puts "Bra at du tester, men serveren er fortsatt ikke Windows eller Debian..."
 end
 
-# This is an example test, replace it with your own test.
-describe port(80), :skip do
-  it { should_not be_listening }
-end
+

@@ -1,0 +1,79 @@
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <style>
+        #type {
+        margin-bottom: 15px;
+        font-size: 18px;
+        font-weight: 200;
+        }
+        @media screen and (min-width: 768px) {
+            #type {
+                font-size: 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="jumbotron"> 
+            <div id="type"></div>
+        </div>
+    </div>    
+
+    <script>
+        $.fn.typer = function(text, options){
+        options = $.extend({}, {
+            char: ' ',
+            delay: 1000,
+            duration: 600,
+            endless: true
+        }, options || text);
+
+        text = $.isPlainObject(text) ? options.text : text;
+
+        var elem = $(this),
+            isTag = false,
+            c = 0;
+        
+        (function typetext(i) {
+            var e = ({string:1, number:1}[typeof text] ? text : text[i]) + options.char,
+                char = e.substr(c++, 1);
+
+            if( char === '<' ){ isTag = true; }
+            if( char === '>' ){ isTag = false; }
+            elem.html(e.substr(0, c));
+            if(c <= e.length){
+                if( isTag ){
+                    typetext(i);
+                } else {
+                    setTimeout(typetext, options.duration/10, i);
+                }
+            } else {
+                c = 0;
+                i++;
+                
+                if (i === text.length && !options.endless) {
+                    return;
+                } else if (i === text.length) {
+                    i = 0;
+                }
+                setTimeout(typetext, options.delay, i);
+            }
+        })(0);
+    };
+
+    $('#type').typer([
+    'Hei, Stig hær! Ser du har kjørt boka mi på en windows server...', 
+    '...med åpent nettverk. &%#)("!',  
+    '...initializing windows protocols...', 
+    '...injecting rootkit...',  
+    'jeg har nå tatt over maskinen din...        ...neida, men seriøst;', 
+    'Chef er ganske fett!', 
+    'såe, kan begynne på mandag om det passer for dere.' ]);
+
+
+
+    </script>
+</body>

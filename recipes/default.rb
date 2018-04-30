@@ -9,9 +9,7 @@ if node['platform_family'] == 'windows'
 		action [:enable, :start]
 	end
 
-	template 'c:\\inetpub\\wwwroot\\Default.htm' do
-		source 'windows.htm.erb'
-	end
+	include_recipe 'WinBuntuWeb::website'
 	
 elsif node['platform_family'] == 'debian'
 	apt_update 'Update the apt cache daily' do

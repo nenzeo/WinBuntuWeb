@@ -9,7 +9,7 @@ if node['platform_family'] == 'windows'
 		action [:enable, :start]
 	end
 
-	include_recipe 'WinBuntuWeb::website'
+	include_recipe 'WinBuntuWeb::winweb'
 	
 elsif node['platform_family'] == 'debian'
 	apt_update 'Update the apt cache daily' do
@@ -25,9 +25,7 @@ elsif node['platform_family'] == 'debian'
 		action [:enable, :start]
 	end
   
-	template '/var/www/html/index.html' do
-		source 'debian.htm.erb'
-	end
+	include_recipe 'WinBuntuWeb::debweb'
 	
 else
 	puts "Denne serveren er ikke Windows eller Debian, vennligst bruk en annen kokebok!"
